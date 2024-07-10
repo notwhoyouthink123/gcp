@@ -18,16 +18,9 @@
     return NO;
 }
 
-- (id)URL {
-    return nil;
-}
 
 - (BOOL)hasURL {
     return NO;
-}
-
-- (id)iosConfig {
-    return nil;
 }
 
 - (BOOL)hasIosConfig {
@@ -342,9 +335,6 @@
     return NO;
 }
 
-- (id)retryConfig {
-    return nil;
-}
 
 - (BOOL)hasRetryConfig {
     return NO;
@@ -502,9 +492,7 @@
     return NO;
 }
 
-+ (id)descriptor {
-    return nil;
-}
+%end
 
 %hook YTILoggingHeartbeatConfig
 
