@@ -18,7 +18,7 @@
     return NO;
 }
 
-- (YTITrackingUrl *)URL {
+- (id)URL {
     return nil;
 }
 
@@ -26,7 +26,7 @@
     return NO;
 }
 
-- (YTIIosQoeHotConfig *)iosConfig {
+- (id)iosConfig {
     return nil;
 }
 
@@ -342,7 +342,7 @@
     return NO;
 }
 
-- (YTIEventLoggingRetryConfig *)retryConfig {
+- (id)retryConfig {
     return nil;
 }
 
@@ -446,7 +446,7 @@
     return NO;
 }
 
-- (YTIEventLoggingRetryConfig *)retryConfig {
+- (id)retryConfig {
     return nil;
 }
 
