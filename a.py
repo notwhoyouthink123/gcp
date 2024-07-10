@@ -6,8 +6,11 @@ import shutil
 from pyrogram import Client, filters
 
 # Bot token from BotFather
-API_TOKEN = os.getenv("TELEGRAM_BOT_API_TOKEN")
-app = Client("my_bot", bot_token=API_TOKEN)
+api_token = "7062513673:AAHACEkfFVbG-gfdUkHFGLEEAa5ZPERNXRc"
+api_id= "18994068"
+api_hash = "8afced1e868e2ac44dbb9eeab5c534ce"
+
+app = Client("my_bot", api_id=api_id, api_hash=api_hash, bot_token=api_token)
 
 # Function to check if the custom ipsw binary exists
 def check_ipsw_exists():
