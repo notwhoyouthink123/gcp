@@ -1,0 +1,145 @@
+#import <Foundation/Foundation.h>
+#import <Security/Security.h>
+
+%hook KDKeychain
+
++ (void)setKeychainIdentifier:(id)identifier {
+    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
+                           (__bridge NSString *)kSecClassGenericPassword, (__bridge NSString *)kSecClass,
+                           identifier, kSecAttrAccount,
+                           @"", kSecAttrService,
+                           (id)kCFBooleanTrue, kSecReturnAttributes,
+                           nil];
+    CFDictionaryRef result = nil;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    if (status == errSecItemNotFound) {
+        status = SecItemAdd((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    }
+    if (status != errSecSuccess) {
+        // Handle error
+    }
+    %orig(identifier);
+}
+
++ (void)setKeychainAccessGroup:(id)accessGroup {
+    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
+                           (__bridge NSString *)kSecClassGenericPassword, (__bridge NSString *)kSecClass,
+                           accessGroup, kSecAttrAccount,
+                           @"", kSecAttrService,
+                           (id)kCFBooleanTrue, kSecReturnAttributes,
+                           nil];
+    CFDictionaryRef result = nil;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    if (status == errSecItemNotFound) {
+        status = SecItemAdd((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    }
+    if (status != errSecSuccess) {
+        // Handle error
+    }
+    %orig(accessGroup);
+}
+
++ (void)setKeychainAdditionalQuery:(id)queryParam {
+    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
+                           (__bridge NSString *)kSecClassGenericPassword, (__bridge NSString *)kSecClass,
+                           queryParam, kSecAttrAccount,
+                           @"", kSecAttrService,
+                           (id)kCFBooleanTrue, kSecReturnAttributes,
+                           nil];
+    CFDictionaryRef result = nil;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    if (status == errSecItemNotFound) {
+        status = SecItemAdd((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    }
+    if (status != errSecSuccess) {
+        // Handle error
+    }
+    %orig(queryParam);
+}
+
++ (id)baseQueryWithIdentifier:(id)identifier {
+    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
+                           (__bridge NSString *)kSecClassGenericPassword, (__bridge NSString *)kSecClass,
+                           identifier, kSecAttrAccount,
+                           @"", kSecAttrService,
+                           (id)kCFBooleanTrue, kSecReturnAttributes,
+                           nil];
+    CFDictionaryRef result = nil;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    if (status == errSecItemNotFound) {
+        status = SecItemAdd((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    }
+    if (status != errSecSuccess) {
+        // Handle error
+    }
+    return %orig(identifier);
+}
++ (BOOL)writeKeychainWithIdentifier:(id)identifier data:(id)data {
+    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
+                           (__bridge NSString *)kSecClassGenericPassword, (__bridge NSString *)kSecClass,
+                           identifier, kSecAttrAccount,
+                           @"", kSecAttrService,
+                           (id)kCFBooleanTrue, kSecReturnAttributes,
+                           nil];
+    CFDictionaryRef result = nil;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    if (status == errSecItemNotFound) {
+        status = SecItemAdd((__bridge CFDictionaryRef)query, (CFTypeRef *)&result);
+    } else {
+        NSDictionary *attributesToUpdate = [NSDictionary dictionaryWithObject:data forKey:(__bridge NSString *)kSecValueData];
+        status = SecItemUpdate((__bridge CFDictionaryRef)query, (__bridge CFDictionaryRef)attributesToUpdate);
+    }
+    if (status != errSecSuccess) {
+        // Handle error
+        return NO;
+    }
+    return %orig(identifier, data);
+}
+
++ (id)keychainItemPersistentRefWithIdentifier:(id)identifier {
+    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
+                           (__bridge NSString *)kSecClassGenericPassword, (__bridge NSString *)kSecClass,
+                           identifier, kSecAttrAccount,
+                           @"", kSecAttrService,
+                           (id)kCFBooleanTrue, kSecReturnPersistentRef,
+                           nil];
+    CFDataRef persistentRef = nil;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&persistentRef);
+    if (status != errSecSuccess) {
+        // Handle error
+        return nil;
+    }
+    return %orig(identifier);
+}
+
++ (id)keychainItemDataWithIdentifier:(id)identifier {
+    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
+                           (__bridge NSString *)kSecClassGenericPassword, (__bridge NSString *)kSecClass,
+                           identifier, kSecAttrAccount,
+                           @"", kSecAttrService,
+                           (id)kCFBooleanTrue, kSecReturnData,
+                           nil];
+    CFDataRef itemData = nil;
+    OSStatus status = SecItemCopyMatching((__bridge CFDictionaryRef)query, (CFTypeRef *)&itemData);
+    if (status != errSecSuccess) {
+        // Handle error
+        return nil;
+    }
+    return %orig(identifier);
+}
+
++ (BOOL)deleteKeychainItemWithIdentifier:(id)identifier {
+    NSDictionary *query = [NSDictionary dictionaryWithObjectsAndKeys:
+                           (__bridge NSString *)kSecClassGenericPassword, (__bridge NSString *)kSecClass,
+                           identifier, kSecAttrAccount,
+                           @"", kSecAttrService,
+                           nil];
+    OSStatus status = SecItemDelete((__bridge CFDictionaryRef)query);
+    if (status != errSecSuccess && status != errSecItemNotFound) {
+        // Handle error
+        return NO;
+    }
+    return %orig(identifier);
+}
+
+%end
